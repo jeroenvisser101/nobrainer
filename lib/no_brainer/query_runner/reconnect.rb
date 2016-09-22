@@ -48,9 +48,9 @@ class NoBrainer::QueryRunner::Reconnect < NoBrainer::QueryRunner::Middleware
   def warn_reconnect(e)
     if e.is_a?(RethinkDB::RqlRuntimeError)
       e_msg = e.message.split("\n").first
-      msg = "Server #{NoBrainer::Config.rethinkdb_url} not ready - #{e_msg}, retrying..."
+      msg = "Server #{NoBrainer::ConnectionManager&.connection&.parsed_uri[:host]} not ready - #{e_msg}, retrying..."
     else
-      msg = "Connection issue with #{NoBrainer::Config.rethinkdb_url} - #{e}, retrying..."
+      msg = "Connection issue with #{NoBrainer::ConnectionManager&.connection&.parsed_uri[:host]} - #{e}, retrying..."
     end
     NoBrainer.logger.try(:warn, msg)
   end
